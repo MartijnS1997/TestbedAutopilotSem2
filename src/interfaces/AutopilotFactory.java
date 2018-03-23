@@ -1,6 +1,7 @@
 package interfaces;
 
 import static java.lang.Math.PI;
+import Autopilot.AutoPilot;
 
 /**
  * Created by Martijn on 23/03/2018.
@@ -12,16 +13,19 @@ public class AutopilotFactory {
         return new Autopilot() {
             @Override
             public AutopilotOutputs simulationStarted(AutopilotConfig config, AutopilotInputs inputs) {
-                System.out.println("Config brake force: " + config.getRMax());
-                //get the orientation used in their testbed
-                System.out.println("Orientation: " + extractOrientation(inputs));
-                return testOutputs;
+                //first run trough the compatability layer
+                AutopilotConfig config_v2 = AutopilotCompatability.convertConfig(config);
+                AutopilotInputs_v2 inputs_v2 = AutopilotCompatability.convertInputs(inputs);
+                //generate the output
+                return autopilot_v2.simulationStarted(config_v2, inputs_v2);
             }
 
             @Override
             public AutopilotOutputs timePassed(AutopilotInputs inputs) {
-                System.out.println("Orientation: " + extractOrientation(inputs));
-                return testOutputs;
+                //send the inputs trough the compatability layer
+                AutopilotInputs_v2 inputs_v2 = AutopilotCompatability.convertInputs(inputs);
+                //get the outputs
+                return autopilot_v2.timePassed(inputs_v2);
             }
 
             @Override
@@ -92,5 +96,9 @@ public class AutopilotFactory {
         }
     };
 
+    /**
+     * The autopilot we will use for our simulations
+     */
+    private static Autopilot_v2 autopilot_v2 = new AutoPilot();
 
 }

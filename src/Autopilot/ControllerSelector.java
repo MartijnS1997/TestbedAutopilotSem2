@@ -334,7 +334,6 @@ public class ControllerSelector {
     }
 
 
-
     /**
      * Getter for the landing controller, the controller that is responsible for landing the drone
      * and bringing it to a standstill

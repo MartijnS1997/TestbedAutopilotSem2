@@ -296,7 +296,22 @@ public class AutoPilot implements Autopilot_v2{
 	/**
 	 * Object that stores the current path to follow
 	 */
-	private Path path;
+	private Path path = new Path() {
+		@Override
+		public float[] getX() {
+			return new float[]{1.4500225f, 2.453282f, -0.13782805f, 2.7937963f, -0.2981369f};
+		}
+
+		@Override
+		public float[] getY() {
+			return new float[]{37.257473f, 48.742775f, 57.646072f, 60.104057f, 76.36183f};
+		}
+
+		@Override
+		public float[] getZ() {
+			return new float[]{-963.0355f, -1255.3386f, -1481.7349f, -1712.6608f, -1880.512f};
+		}
+	};
 	
 	/**
 	 * store current AutoPilot mode:
