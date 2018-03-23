@@ -1,0 +1,41 @@
+their def:
+
+main wing def:
+    up      -> +
+    down    -> -
+
+horizontal
+    upfl    -> -
+    downfl  -> +
+
+heading def:
+    left    -> +
+    right   -> -
+
+pitch def:
+    up      -> +
+    down    -> -
+
+roll def:
+    to left  -> +
+    to right -> -
+
+
+our def
+
+main wing:
+    up      -> +
+    down    -> -
+horizontal:
+    upfl    -> -
+    downfl  -> +
+
+heading:
+    left    -> +
+    right   -> -
+pitch
+    up      -> +
+    down    -> -
+roll
+    left    ->+
+    right   ->-
