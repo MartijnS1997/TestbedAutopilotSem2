@@ -32,8 +32,9 @@ public abstract class AutoPilotFlightController extends Controller{
         if(this.cubeVisibleOnCamera()){
             return false;
         }
+        System.out.println("No cube visible on camera");
         //there was no drone visible on the camera, see if there are cubes in front of the drone
-        return cubeInFrontOfDrone(inputs);
+        return !cubeInFrontOfDrone(inputs);
     }
 
     /**
@@ -43,9 +44,11 @@ public abstract class AutoPilotFlightController extends Controller{
      */
     private boolean cubeInFrontOfDrone(AutopilotInputs_v2 inputs){
         Path path = this.getAutopilot().getPath();
+
         List<Vector> cubePositions = Controller.extractPath(path);
         Vector dronePosition = Controller.extractPosition(inputs);
         Vector droneOrientation = Controller.extractOrientation(inputs);
+        System.out.println("Cube positions: " + cubePositions);
         for(Vector cubePosition: cubePositions){
             if(inFrontOfDrone(cubePosition, dronePosition, droneOrientation )){
                 return true;

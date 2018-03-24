@@ -6,6 +6,10 @@ import Helper.Pixel;
 import interfaces.*;
 import interfaces.Vector;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -43,6 +47,38 @@ public class AutoPilotCamera {
         this.horizAngleOfView = horizontalAngleOfView;
         this.verticalAngleOfView = verticalAngleOfView;
         this.setCameraImage(this.convertToCameraImage(image, nbRows, nbColumns));
+    }
+
+    public void takeSnapShot(AutopilotInputs_v2 inputs_v2){
+
+        int nbColumns = this.getNbColumns();
+        int nbRows = this.getNbRows();
+        int bpp = 3;
+        byte[] imageByteArray =  inputs_v2.getImage();
+        String format = "PNG";
+//        java.nio.file.Path destPath = Paths.get("C:\\Users\\Martijn\\Documents\\Univ\\3e fase Bbi\\Semester 2\\P&O_CW\\testAutopilotTestBed");
+//        File file = new File(destPath.toUri());
+        File file = new File("orginalTestImage.png");
+        BufferedImage testImage = new BufferedImage(nbColumns, nbRows, 1);
+
+        for(int x = 0; x < nbColumns; x++)
+        {
+            for(int y = 0; y < nbRows; y++)
+            {
+                //System.out.println(x+" : "+y);
+                int i = (x + (nbColumns * y)) * bpp;
+                //System.out.println("byte: "+imageByteArray[i]);
+                int r = (imageByteArray[i])& 0xFF;
+                int g = (imageByteArray[i + 1]) & 0xFF;
+                int b =(imageByteArray[i+2])& 0xFF;
+
+                testImage.setRGB(x, nbRows - (y + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
+            }
+        }
+        try {
+            ImageIO.write(testImage, format, file);
+        } catch (IOException e) { e.printStackTrace(); }
+
     }
 
 

@@ -3,6 +3,12 @@ package Autopilot;
 import Exceptions.NoCubeException;
 import interfaces.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+
 import static java.lang.Math.*;
 
 //TODO base the incrementation of the wings on the current outputs instead of the previous
@@ -22,6 +28,9 @@ public class GammaFlightController extends AutoPilotFlightController {
 
 
     public ControlOutputs getControlActions(AutopilotInputs_v2 inputs){
+        if(first){
+            System.out.println("gamma controller in action");
+        }
         this.setCurrentInputs(inputs);
         ControlOutputs outputs = new ControlOutputs();
         AutoPilotCamera APCamera = this.getAutopilot().getAPCamera();
@@ -37,6 +46,12 @@ public class GammaFlightController extends AutoPilotFlightController {
 
         try{
             center = APCamera.getCenterOfNCubes(1);
+            if (first) {
+                System.out.println("all cube centers: " + APCamera.getAllCubeCenters());
+                APCamera.takeSnapShot(inputs);
+                first = false;
+                //throw new IllegalArgumentException("STOP SIMULATION");
+            }
         }catch(NoCubeException e){
             center = new Vector(-10, 0, 4);
         }
@@ -64,6 +79,10 @@ public class GammaFlightController extends AutoPilotFlightController {
 
         return outputs;
     }
+
+
+
+    private boolean first = true;
     @Override
     protected void rollControl(Controller.ControlOutputs outputs, AutopilotInputs_v2 currentInput){
         float roll = currentInput.getRoll();

@@ -15,7 +15,7 @@ public class AutopilotFactory {
             public AutopilotOutputs simulationStarted(AutopilotConfig config, AutopilotInputs inputs) {
                 //first run trough the compatability layer
                 AutopilotConfig config_v2 = AutopilotCompatability.convertConfig(config);
-                AutopilotInputs_v2 inputs_v2 = AutopilotCompatability.convertInputs(inputs);
+                AutopilotInputs_v2 inputs_v2 = AutopilotCompatability.convertInputs(inputs, config_v2);
                 //generate the output
                 return autopilot_v2.simulationStarted(config_v2, inputs_v2);
             }
@@ -23,7 +23,7 @@ public class AutopilotFactory {
             @Override
             public AutopilotOutputs timePassed(AutopilotInputs inputs) {
                 //send the inputs trough the compatability layer
-                AutopilotInputs_v2 inputs_v2 = AutopilotCompatability.convertInputs(inputs);
+                AutopilotInputs_v2 inputs_v2 = AutopilotCompatability.convertInputs(inputs, autopilot_v2.getConfig());
                 //get the outputs
                 return autopilot_v2.timePassed(inputs_v2);
             }
@@ -99,6 +99,6 @@ public class AutopilotFactory {
     /**
      * The autopilot we will use for our simulations
      */
-    private static Autopilot_v2 autopilot_v2 = new AutoPilot();
+    private static AutoPilot autopilot_v2 = new AutoPilot();
 
 }

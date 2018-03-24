@@ -24,9 +24,9 @@ public class AutopilotTakeoffController extends Controller{
         Vector position = Controller.extractPosition(inputs);
         Vector target = getTarget();
         if(position.distanceBetween(target) < TARGET_DISTANCE_THRESHOLD){
-            System.out.println("altitude reached");
-            System.out.println("Z - position: " + inputs.getZ());
-            System.out.println("Approx velocity: " + this.getVelocityApprox(this.getPreviousInputs(), this.getCurrentInputs()));
+//            System.out.println("altitude reached");
+//            System.out.println("Z - position: " + inputs.getZ());
+//            System.out.println("Approx velocity: " + this.getVelocityApprox(this.getPreviousInputs(), this.getCurrentInputs()));
             //load the image in and check if there are any cubes in sight
             //if not use this controller further
             AutoPilotCamera APCamera = this.getAutopilot().getAPCamera();
