@@ -10,12 +10,15 @@ import Autopilot.AutoPilot;
 public class AutopilotFactory {
 
     public static Autopilot createAutopilot() {
+        AutopilotCompatability.generatePath();
         return new Autopilot() {
             @Override
             public AutopilotOutputs simulationStarted(AutopilotConfig config, AutopilotInputs inputs) {
                 //first run trough the compatability layer
                 AutopilotConfig config_v2 = AutopilotCompatability.convertConfig(config);
                 AutopilotInputs_v2 inputs_v2 = AutopilotCompatability.convertInputs(inputs, config_v2);
+                Path approxPath = AutopilotCompatability.extractPath();
+                autopilot_v2.setPath(approxPath);
                 //generate the output
                 return autopilot_v2.simulationStarted(config_v2, inputs_v2);
             }

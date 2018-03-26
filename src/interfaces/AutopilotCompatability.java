@@ -1,6 +1,11 @@
 package interfaces;
 
-import java.util.Arrays;
+import Helper.WorldGenerator;
+
+import java.io.*;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Martijn on 23/03/2018.
@@ -288,4 +293,87 @@ public class AutopilotCompatability {
     private static int convertIndexToInt(int i, int j, int k, int columns, int bytesPerPixel){
         return  i*columns*bytesPerPixel+ j*bytesPerPixel + k;
     }
+
+    /**
+     * Generates a random path written to the current working directory, to be read from by the autopilot
+     */
+    public static void generatePath(){
+        int nbCubes = 5;
+        WorldGenerator generator = new WorldGenerator(nbCubes);
+        generator.createPath(BASE_VECTOR, REAL_PATH, APPROX_PATH);
+    }
+
+    /**
+     * Extracts the path from the runtime environment at name: "randomPath"
+     * @return the path located in the file randomPath in the execution environment
+     */
+    public static Path extractPath(){
+        java.nio.file.Path apPathDirectory = Paths.get(System.getProperty("user.dir"), APPROX_PATH);
+        System.out.println("Current Directory: " + apPathDirectory);
+        File pathFile = new File(apPathDirectory.toUri());
+        List<Vector> pathEntries = new ArrayList<>();
+        //open a stream to read
+        try {
+            BufferedReader fileReader = new BufferedReader(new FileReader(pathFile));
+            String line;
+
+            while((line = fileReader.readLine())!= null){
+                String[] lineElems = line.split(" ");
+                float xPos = Float.parseFloat(lineElems[0]);
+                float yPos = Float.parseFloat(lineElems[1]);
+                float zPos = Float.parseFloat(lineElems[2]);
+                Vector pathElem = new Vector(xPos, yPos, zPos);
+                System.out.println("extracted element: " + pathElem);
+                pathEntries.add(pathElem);
+            }
+            fileReader.close();
+            System.out.println("Exited retrieval loop");
+            return convertToPath(pathEntries);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("The size of the cube list: " + pathEntries.size());
+        return convertToPath(pathEntries);
+    }
+
+    /**
+     * Converts a given list of vectors into a path object as specified in the autopilot interfaces
+     * @param vectors the vectors to create a path from
+     * @return a path with the same positions as the provided vectors
+     */
+    private static Path convertToPath(List<Vector> vectors){
+        int pathLen = vectors.size();
+        float[] xPos = new float[pathLen];
+        float[] yPos = new float[pathLen];
+        float[] zPos = new float[pathLen];
+
+        for(int index = 0; index != pathLen; index++){
+            Vector vector = vectors.get(index);
+            xPos[index] = vector.getxValue();
+            yPos[index] = vector.getyValue();
+            zPos[index] = vector.getzValue();
+        }
+
+        //return the converted path
+        return new Path(){
+            @Override
+            public float[] getX() {
+                return xPos;
+            }
+
+            @Override
+            public float[] getY() {
+                return yPos;
+            }
+
+            @Override
+            public float[] getZ() {
+                return zPos;
+            }
+        };
+    }
+
+    private final static String REAL_PATH = "realPath";
+    private final static String APPROX_PATH = "randomizedPath";
+    private final static Vector BASE_VECTOR = new Vector(0, 30f, -700f);
 }

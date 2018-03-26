@@ -1,3 +1,4 @@
+import interfaces.AutopilotCompatability;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -81,6 +82,11 @@ public class imageTests {
      */
     private static int convertIndexToInt(int i, int j, int k, int columns, int bytesPerPixel){
         return i*columns*bytesPerPixel+ j*bytesPerPixel + k;
+    }
+
+    @Test
+    public void testPathExtract(){
+        AutopilotCompatability.extractPath();
     }
 
 }

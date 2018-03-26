@@ -196,7 +196,7 @@ public class AutopilotTaxiingController extends Controller {
         Vector target = this.getTarget();
         //get the current pos
         Vector position = Controller.extractPosition(inputs);
-
+        System.out.println("Target position: " + target);
         return position.distanceBetween(target) <=  REACHING_DISTANCE;
     }
 
