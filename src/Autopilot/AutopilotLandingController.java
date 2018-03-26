@@ -1,15 +1,11 @@
+
 package Autopilot;
 
-
-
-
-import interfaces.AutopilotConfig;
-import interfaces.AutopilotInputs_v2;
-import interfaces.AutopilotOutputs;
-import interfaces.Vector;
+import interfaces.*;
 
 import static java.lang.Math.*;
 
+import org.omg.CORBA.SetOverrideTypeHelper;
 
 
 /**
@@ -59,7 +55,7 @@ public class AutopilotLandingController extends Controller {
 
         AutopilotInputs_v2 prevInputs = this.getPreviousInputs();
 
-        System.out.println("Current velocity: " + this.getVelocityApprox(prevInputs, getCurrentInputs()));
+//        System.out.println("Current velocity: " + this.getVelocityApprox(prevInputs, getCurrentInputs()));
 
         switch (landingPhase){
             case STABILIZE:
@@ -67,14 +63,14 @@ public class AutopilotLandingController extends Controller {
                 break;
             case RAPID_DESCEND:
                 this.getRapidDescendControls(outputs);
-                System.out.println("rapidDescend");
+//                System.out.println("rapidDescend");
                 break;
             case SOFT_DESCEND:
-                System.out.println("soft descend");
+//                System.out.println("soft descend");
                 this.getSoftDescendControls(outputs);
                 break;
             case SLOW_DOWN:
-                System.out.println("Slowdown");
+//            	System.out.println("Slowdown");
                 this.slowDown(outputs);
                 break;
         }
@@ -110,8 +106,8 @@ public class AutopilotLandingController extends Controller {
         }else if(!this.isHasStartedSoftDescend()){
             Vector position = Controller.extractPosition(currentInputs);
             //check if we are low enough to initiate the soft descend
-            System.out.println("Current y:" + position.getyValue());
-            System.out.println("transition: " + getStartSoftDescendPhaseHeight());
+//            System.out.println("Current y:" + position.getyValue());
+//            System.out.println("transition: " + getStartSoftDescendPhaseHeight());
             if(position.getyValue() > this.getStartSoftDescendPhaseHeight()){
                 //if not continue rapid descend
 
@@ -119,11 +115,11 @@ public class AutopilotLandingController extends Controller {
             }
             //if not start the soft descend
             this.setHasStartedSoftDescend();
-            System.out.println("Soft Started: " + currentInputs.getY());
+//            System.out.println("Soft Started: " + currentInputs.getY());
 
             return LandingPhases.SOFT_DESCEND;
         }else{
-            System.out.println("CurrentS y: " + currentInputs.getY());
+//            System.out.println("CurrentS y: " + currentInputs.getY());
             return LandingPhases.SOFT_DESCEND;
         }
     }
@@ -165,7 +161,7 @@ public class AutopilotLandingController extends Controller {
      * @param outputs the soft landing phase
      */
     private void getSoftDescendControls(ControlOutputs outputs){
-        System.out.println("querying soft descend");
+//        System.out.println("querying soft descend");
         AutopilotInputs_v2 currentInputs = this.getCurrentInputs();
         AutopilotInputs_v2 prevInputs = this.getPreviousInputs();
         AutopilotConfig config = this.getConfig();
@@ -208,10 +204,8 @@ public class AutopilotLandingController extends Controller {
 
         //stabilize the pitch and the roll
         //super.rollControl(outputs, currentInputs);
-        rollStabilizer(outputs, currentInputs, prevInputs);
         pitchStabilizer(outputs, currentInputs, prevInputs);
-
-
+        rollStabilizer(outputs, currentInputs, prevInputs);
         outputs.setThrust(STABILIZING_THURST);
 
 
@@ -236,7 +230,7 @@ public class AutopilotLandingController extends Controller {
         //extract the current orientation
         Vector orientation = Controller.extractOrientation(currentInputs);
         float pitch = orientation.getyValue();
-        System.out.println(pitch);
+//        System.out.println(pitch);
         PIDController pitchPid =this.getPitchPIDController();
         float deltaTime = Controller.getDeltaTime(prevInputs, currentInputs);
         float PIDControlActions =  pitchPid.getPIDOutput(pitch, deltaTime);
