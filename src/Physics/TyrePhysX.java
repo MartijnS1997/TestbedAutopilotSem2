@@ -5,6 +5,8 @@ import interfaces.*;
 
 import static java.lang.Math.*;
 
+import Helper.Vector;
+
 /**
  * Created by Martijn on 13/02/2018.
  * A class of tyres, normal Tyres only exert a force in the y-component as an reaction to deltaRadius

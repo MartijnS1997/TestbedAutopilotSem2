@@ -1,4 +1,6 @@
-package interfaces; /**
+package Helper;
+
+/**
  * Whole class Made by Martijn
  */
 
@@ -6,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 //import be.kuleuven.cs.som.annotate.*;
+import math.Vector3f;
+
 
 /**
  * A class of Immutable Vectors in 3D space
@@ -86,7 +90,7 @@ public class Vector {
 	/**
 	 * returns a new vector containing the scalar multiplication of this and the scalar
 	 * @Param scalar the scalar to re scale the vector
-	 * @return new interfaces.Vector(this.getxValue()*scalar, this.getyValue()*scalar, this.getzvalue()*scalar)
+	 * @return new Vector(this.getxValue()*scalar, this.getyValue()*scalar, this.getzvalue()*scalar)
 	 * @author Martijn Sauwens
 	 */
 	public Vector scalarMult(float scalar){
@@ -166,7 +170,28 @@ public class Vector {
 		// the denominator is a product of the 2-norms of the vectors
 		float denominator = this.getSize()*other.getSize();
 		
-		return (float)Math.acos(numerator/denominator);
+		double breuk = numerator/denominator;
+		
+		
+		if (Math.abs(breuk) > 1f && Math.abs(breuk)*PRECISION < 1f)breuk = 1*Math.signum(breuk);
+		
+		return (float)Math.acos(breuk);
+	}
+
+
+	/**
+	 * Makes given vectors horizontal an calculates angle going from this to other.
+	 * Positive angles mean a counterclockwise rotation (going from this to other)
+	 * @param other
+	 * @return
+	 */
+	public float getSignedAngleBetween(Vector other) {
+		Vector origin = new Vector(0f,0f,0f);
+		Vector thisVector = this.makeHorizontal();
+		Vector otherVector = other.makeHorizontal();
+		
+		if (other.toTheRightOf(origin, thisVector))return -Math.abs(thisVector.getAngleBetween(otherVector));
+		return Math.abs(thisVector.getAngleBetween(otherVector));
 	}
 	
 	
@@ -181,6 +206,17 @@ public class Vector {
 		else{
 			return (float)Math.sqrt(Math.pow(this.getxValue()-other.getxValue(), 2) + Math.pow(this.getyValue()-other.getyValue(), 2) + Math.pow(this.getzValue()-other.getzValue(), 2));
 		}
+	}
+	
+	/**
+	 * If, traversing along direction, going from this towards other, we would have to go backwards, then the sign of signDistanceBetween is negative.
+	 * @author Anthony Rathe
+	 */
+	public float distanceBetween(Vector other, Vector direction){
+		float distance = this.distanceBetween(other);
+		if (direction.getAngleBetween(other.vectorDifference(this)) >= Math.PI)distance = -distance;
+		return distance;
+		
 	}
 	
 	/**
@@ -214,7 +250,7 @@ public class Vector {
 	 * @param other
 	 * @return the cross product of the two vectors.
 	 * 		| a = this, b = other
-	 * 		| result == new interfaces.Vector( ay*bz - az*by,
+	 * 		| result == new Vector( ay*bz - az*by,
 	 * 		|						az*bx - ax*bz,
 	 * 		|						ax*by - ay*bx )
 	 * @author Martijn Sauwens
@@ -233,12 +269,12 @@ public class Vector {
 	}
 	
 	/**
-	 * Returns a string describing the interfaces.Vector
+	 * Returns a string describing the Vector
 	 * @author Martijn Sauwens
 	 */
 	@Override
 	public String toString() {
-		return "interfaces.Vector [xValue=" + xValue + ", yValue=" + yValue + ", zValue=" + zValue + "]";
+		return "(" + xValue + ", " + yValue + ", " + zValue + ")";
 	}
 
 	
@@ -379,6 +415,20 @@ public class Vector {
 	}
 
 	/**
+	 * Converts the given vector to an Vector3f object, used in the gui class
+	 * @return a vector3f object equivalent to the instance it is invoked against
+	 * @author Martijn Sauwens
+	 */
+	public Vector3f convertToVector3f(){
+		float xPart = this.getxValue();
+		float yPart = this.getyValue();
+		float zPart = this.getzValue();
+
+		return new Vector3f(xPart, yPart, zPart);
+	}
+
+
+	/**
 	 * @author anthonyrathe
 	 * @return a floating point array containing the vector values
 	 */
@@ -398,10 +448,10 @@ public class Vector {
 
 
 	/**
-	 * Makes a deep copy of the vector currently selected and returns the copy
-	 * @return a deep copy of the current vector
+	 * Makes a deep deepCopy of the vector currently selected and returns the deepCopy
+	 * @return a deep deepCopy of the current vector
 	 */
-	public Vector copy(){
+	public Vector deepCopy(){
 		return new Vector(this.getxValue(), this.getyValue(), this.getzValue());
 	}
 
@@ -410,6 +460,7 @@ public class Vector {
 	 * @param other the vector to project
 	 * @return the other vector projected onto the vector which this method is invoked against
 	 */
+	@Deprecated
 	public Vector projectOnVector(Vector other){
 		//first get the numerator
 		float numerator = this.scalarProduct(other);
@@ -418,6 +469,19 @@ public class Vector {
 
 		//then get multiply with the vector instance
 		return this.scalarMult(coefficient);
+	}
+
+	/**
+	 * Projects the instance onto the provided vector
+	 * @param other the vector to project onto
+	 * @return a vector containing the projection of the instance onto the other
+	 */
+	public Vector projectOn(Vector other){
+		//first get the numerator
+		float numerator = other.scalarProduct(this);
+		float denominator = other.scalarProduct(other);
+		float coefficient = numerator/denominator;
+		return other.scalarMult(coefficient);
 	}
 
 	/**
@@ -487,6 +551,16 @@ public class Vector {
 		return tempVector;
 	}
 
+	/**
+	 * Converts a vector 3f vector to a standard immutable vector
+	 * @param vector3f the vector to convert
+	 * @return the converted vector 3f to Vector format
+	 */
+	public static Vector vector3fToVector(Vector3f vector3f){
+		return new Vector(vector3f.x, vector3f.y, vector3f.z);
+	}
+
+
 	/*
 	Getters and Setters
 	 */
@@ -539,5 +613,6 @@ public class Vector {
 	Constants
 	 */
 	public final static int VECTOR_SIZE = 3;
+	public final static float PRECISION = 0.99999f;
 
 }

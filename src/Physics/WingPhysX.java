@@ -4,6 +4,8 @@ import interfaces.*;
 
 import static java.lang.Math.PI;
 
+import Helper.Vector;
+
 /**
  * Implmented by Martijn (r0623847)
  */

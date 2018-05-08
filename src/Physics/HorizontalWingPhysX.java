@@ -1,7 +1,7 @@
 package Physics;
 
 
-import interfaces.Vector;
+import Helper.Vector;
 
 /**
  * Created by Martijn & Jasper on 9/10/2017.

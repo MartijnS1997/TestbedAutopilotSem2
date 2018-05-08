@@ -4,6 +4,8 @@ import interfaces.*;
 
 import static java.lang.Math.*;
 
+import Helper.Vector;
+
 
 /**
  * Created by Martijn on 14/02/2018.

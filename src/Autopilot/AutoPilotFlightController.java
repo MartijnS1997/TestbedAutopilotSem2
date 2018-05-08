@@ -5,6 +5,8 @@ import interfaces.*;
 
 import java.util.List;
 
+import Helper.Vector;
+
 import static java.lang.Math.PI;
 
 /**

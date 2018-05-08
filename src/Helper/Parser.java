@@ -1,6 +1,5 @@
 package Helper;
 
-import interfaces.Vector;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

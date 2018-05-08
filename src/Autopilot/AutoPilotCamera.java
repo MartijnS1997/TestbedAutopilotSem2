@@ -4,7 +4,7 @@ import Exceptions.NoCubeException;
 import Helper.CameraImage;
 import Helper.Pixel;
 import interfaces.*;
-import interfaces.Vector;
+import Helper.Vector;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

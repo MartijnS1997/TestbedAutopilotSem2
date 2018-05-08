@@ -1,8 +1,10 @@
 package Autopilot;
 
 
+import Helper.Vector;
 import Physics.PhysXEngine;
 import interfaces.*;
+import Autopilot.AutopilotFiniteStateMachine;
 
 //TODO: only recalculate after the new frame is rendered or make seperate controls for the case no new
 //visual input was generated
@@ -21,7 +23,7 @@ public class AutoPilot implements Autopilot_v2{
 	 */
 	public AutoPilot(String controllerConfig){
 		//first get the controller selector
-		this.setSelector(new ControllerSelector(this));
+		this.stateMachine = new AutopilotFiniteStateMachine(this);
 
 		//may be out commented if the transitions are smooth
 		//this.getSelector().forceActiveController(FlightState.TAXIING);
@@ -74,6 +76,11 @@ public class AutoPilot implements Autopilot_v2{
     }
     
 
+	/**
+	 * The finite state machine used to govern the controllers for the autopilot
+	 */
+	private AutopilotFiniteStateMachine stateMachine;
+
     /**
      * configures the autopilot at the start of the simulation
      * @param configuration the configuration of the autopilot
@@ -89,7 +96,6 @@ public class AutoPilot implements Autopilot_v2{
 		//initialize the Physics Engine Optimisations
 		this.setPhysXOptimisations(this.getPhysXEngine().createPhysXOptimisations());
 		//initialize the controllers
-		this.getSelector().setConfig(configuration);
 
 
         //Initialize the autopilot camera
@@ -296,7 +302,7 @@ public class AutoPilot implements Autopilot_v2{
 	/**
 	 * Object that stores the current path to follow
 	 */
-	private Path path = new Path() {
+	private Path path = new Path(null, null, null) {
 		@Override
 		public float[] getX() {
 			return new float[]{1.4500225f, 2.453282f, -0.13782805f, 2.7937963f, -0.2981369f};

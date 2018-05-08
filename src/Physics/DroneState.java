@@ -1,5 +1,6 @@
 package Physics;
 
+import Helper.Vector;
 import interfaces.*;
 /**
  * Created by Martijn on 20/02/2018.

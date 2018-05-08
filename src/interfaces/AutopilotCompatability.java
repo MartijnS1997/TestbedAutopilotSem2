@@ -1,5 +1,6 @@
 package interfaces;
 
+import Helper.Vector;
 import Helper.WorldGenerator;
 
 import java.io.*;

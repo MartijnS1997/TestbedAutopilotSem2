@@ -1,7 +1,7 @@
 package Autopilot;
 
 
-import interfaces.Vector;
+import Helper.Vector;
 
 /**
  * Created by Martijn on 21/03/2018.

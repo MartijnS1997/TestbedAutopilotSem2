@@ -1,5 +1,9 @@
 package Helper;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 import interfaces.*;
+
 
 
 /**
@@ -62,7 +66,42 @@ public class SquareMatrix {
 
         return new SquareMatrix(newMatrixArray);
     }
+    /**
+     * Getter for the transformation matrix that transforms from the drone axis system onto the world
+     * @param orientation the orientation of the drone(heading, pitch, roll);
+     * @return a matrix containing the transformation from drone to world for a given orientation
+     */
+    public static SquareMatrix getDroneOnWorldTransformMatrix(Vector orientation){
+        float heading = orientation.getxValue();
+        float pitch = orientation.getyValue();
+        float roll = orientation.getzValue();
 
+        float[] matrixArray = new float[]{
+                (float) (cos(heading)*cos(roll) + sin(heading)*sin(pitch)*sin(roll)), (float) (cos(roll)*sin(heading)*sin(pitch)-cos(heading)*sin(roll)), (float) (cos(pitch)*sin(heading)),
+                (float) (cos(pitch)*sin(roll)), (float) (cos(pitch)*cos(roll)), (float) -sin(pitch),
+                (float) (cos(heading)*sin(pitch)*sin(roll) - cos(roll)*sin(heading)), (float) (sin(heading)*sin(roll)+cos(heading)*cos(roll)*sin(pitch)), (float) (cos(heading)*cos(pitch))};
+        return new SquareMatrix(matrixArray);
+    }
+
+    /**
+     * Getter for the matrix that contains the transformation from the world to the drone for a given orientation
+     * this matrix is the transpose of the drone on world transformation
+     * @param orientation the orientation to calculate the transformation matrix for
+     * @return the transformation matrix for a transformation from world to drone for the given orientation
+     */
+    public static SquareMatrix getWorldOnDroneTransformMatrix(Vector orientation){
+        float heading = orientation.getxValue();
+        float pitch = orientation.getyValue();
+        float roll = orientation.getzValue();
+
+        float[] matrixArray = new float[]{
+                (float) (cos(heading)*cos(roll) + sin(heading)*sin(pitch)*sin(roll)), (float) (cos(pitch)*sin(roll)), (float) (cos(heading)*sin(pitch)*sin(roll) - cos(roll)*sin(heading)),
+                (float) (cos(roll)*sin(heading)*sin(pitch) - cos(heading)*sin(roll)), (float) (cos(pitch)*cos(roll)), (float) (sin(heading)*sin(roll) + cos(heading)*cos(roll)*sin(pitch)),
+                (float) (cos(pitch)*sin(heading)), (float)(-sin(pitch)), (float)(cos(heading)*cos(pitch))
+        };
+
+        return new SquareMatrix(matrixArray);
+    }
     /**
      * Calculates the transpose of the given matrix
      * @return a new matrix containing the transpose of the given matrix
